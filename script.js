@@ -32,7 +32,7 @@ document.addEventListener('keydown', function (e) {
   }
 });
 
-//Elements
+//Button Scrolling
 const buttonScrollTo = document.querySelector('.btn--scroll-to');
 const section1 = document.querySelector('#section--1');
 
@@ -43,3 +43,32 @@ const scrollToSection1 = function (event) {
 };
 
 buttonScrollTo.addEventListener('click', scrollToSection1);
+
+//Page Navigation
+
+//BAD SOLUTION
+// document.querySelectorAll('.nav__link').forEach(el =>
+//   el.addEventListener('click', function (e) {
+//     e.preventDefault();
+
+//     document
+//       .querySelector(this.getAttribute('href'))
+//       .scrollIntoView({ behavior: 'smooth' });
+//   })
+// );
+
+//MORE EFFICIENT
+//1. Add event listener to common parent element
+//2. Determine what element originated the event (event.target);
+
+document.querySelector('.nav__links').addEventListener('click', function (e) {
+  e.preventDefault();
+  const element = e.target;
+
+  //Matching strategy
+  if (element.classList.contains('nav__link')) {
+    document
+      .querySelector(element.getAttribute('href'))
+      .scrollIntoView({ behavior: 'smooth' });
+  }
+});
