@@ -72,3 +72,31 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
       .scrollIntoView({ behavior: 'smooth' });
   }
 });
+
+//Tabs
+const tabs = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+
+tabs.addEventListener('click', function (e) {
+  //⚠️ use closest because inside the button have a span element
+  const selectedTab = e.target.closest('.operations__tab');
+
+  //Matching strategy
+  if (selectedTab?.classList.contains('operations__tab')) {
+    //TAB
+    [...selectedTab.parentNode.children].forEach(node => {
+      node.getAttribute('data-tab') === selectedTab.getAttribute('data-tab')
+        ? selectedTab.classList.add('operations__tab--active')
+        : node.classList.remove('operations__tab--active');
+    });
+
+    //CONTENT
+    tabsContent.forEach(node => {
+      node.classList.contains(
+        `operations__content--${selectedTab.getAttribute('data-tab')}`
+      )
+        ? node.classList.add('operations__content--active')
+        : node.classList.remove('operations__content--active');
+    });
+  }
+});
