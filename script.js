@@ -1,12 +1,19 @@
 'use strict';
 
-///////////////////////////////////////
-// Modal window
-
+//ELEMENTS
 const modal = document.querySelector('.modal');
 const overlay = document.querySelector('.overlay');
 const btnCloseModal = document.querySelector('.btn--close-modal');
 const btnsOpenModal = document.querySelectorAll('.btn--show-modal');
+const buttonScrollTo = document.querySelector('.btn--scroll-to');
+const section1 = document.querySelector('#section--1');
+const tabs = document.querySelector('.operations__tab-container');
+const tabsContent = document.querySelectorAll('.operations__content');
+const navBarElement = document.querySelector('.nav');
+const navOptionsElement = document.querySelector('.nav__links');
+
+///////////////////////////////////////
+// Modal window
 
 const openModal = function (event) {
   event.preventDefault();
@@ -33,12 +40,8 @@ document.addEventListener('keydown', function (e) {
 });
 
 //Button Scrolling
-const buttonScrollTo = document.querySelector('.btn--scroll-to');
-const section1 = document.querySelector('#section--1');
-
 //Events
 const scrollToSection1 = function (event) {
-  console.log(event);
   section1.scrollIntoView({ behavior: 'smooth' });
 };
 
@@ -61,7 +64,7 @@ buttonScrollTo.addEventListener('click', scrollToSection1);
 //1. Add event listener to common parent element
 //2. Determine what element originated the event (event.target);
 
-document.querySelector('.nav__links').addEventListener('click', function (e) {
+navOptionsElement.addEventListener('click', function (e) {
   e.preventDefault();
   const element = e.target;
 
@@ -74,9 +77,6 @@ document.querySelector('.nav__links').addEventListener('click', function (e) {
 });
 
 //Tabs
-const tabs = document.querySelector('.operations__tab-container');
-const tabsContent = document.querySelectorAll('.operations__content');
-
 tabs.addEventListener('click', function (e) {
   //⚠️ use closest because inside the button have a span element
   const selectedTab = e.target.closest('.operations__tab');
@@ -100,3 +100,28 @@ tabs.addEventListener('click', function (e) {
     });
   }
 });
+
+//Menu fade animation
+const handleFadeAnimationNav = function (event) {
+  const element = event.target;
+
+  if (element?.classList.contains('nav__link')) {
+    const siblings = element.closest('nav').querySelectorAll('.nav__link');
+    const logo = element.closest('nav').querySelector('#logo');
+
+    siblings.forEach(option => {
+      element !== option && (option.style.opacity = this.opacity);
+    });
+
+    logo.style.opacity = this.opacity;
+  }
+};
+
+navBarElement.addEventListener(
+  'mouseover',
+  handleFadeAnimationNav.bind({ opacity: 0.5 })
+);
+navBarElement.addEventListener(
+  'mouseout',
+  handleFadeAnimationNav.bind({ opacity: 1 })
+);
