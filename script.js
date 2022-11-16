@@ -11,6 +11,8 @@ const tabs = document.querySelector('.operations__tab-container');
 const tabsContent = document.querySelectorAll('.operations__content');
 const navBarElement = document.querySelector('.nav');
 const navOptionsElement = document.querySelector('.nav__links');
+const headerElement = document.querySelector('.header');
+const heightNavBar = navBarElement.getBoundingClientRect().height;
 
 ///////////////////////////////////////
 // Modal window
@@ -125,3 +127,20 @@ navBarElement.addEventListener(
   'mouseout',
   handleFadeAnimationNav.bind({ opacity: 1 })
 );
+
+//sticky nav bar
+const stickyNav = entries => {
+  const [entry] = entries;
+
+  !entry.isIntersecting
+    ? navBarElement.classList.add('nav__sticky')
+    : navBarElement.classList.remove('nav__sticky');
+};
+const options = {
+  root: null, //viewport : dont't need to be declared
+  treshold: 0, //When element disapear of the screen
+  rootMargin: `${-heightNavBar}px`, //special effect: heigh of navbar. appear 90px before section 1 appear
+};
+
+const observer = new IntersectionObserver(stickyNav, options);
+observer.observe(headerElement);
