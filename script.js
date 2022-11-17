@@ -13,6 +13,8 @@ const navBarElement = document.querySelector('.nav');
 const navOptionsElement = document.querySelector('.nav__links');
 const headerElement = document.querySelector('.header');
 const heightNavBar = navBarElement.getBoundingClientRect().height;
+const sectionsElements = document.querySelectorAll('.section');
+const allImages = document.querySelectorAll('.lazy-img');
 
 ///////////////////////////////////////
 // Modal window
@@ -144,3 +146,55 @@ const options = {
 
 const observer = new IntersectionObserver(stickyNav, options);
 observer.observe(headerElement);
+
+//Sections Animation
+const revealSection = function (entries) {
+  const [entry] = entries;
+  if (!entry.isIntersecting) return;
+
+  entry.target.classList.remove('section--hidden');
+  sectionObserver.unobserve(entry.target);
+};
+
+const optionsSections = {
+  root: null,
+  threshold: 0.15,
+};
+
+const sectionObserver = new IntersectionObserver(
+  revealSection,
+  optionsSections
+);
+
+sectionsElements.forEach(section => {
+  sectionObserver.observe(section);
+  section.classList.add('section--hidden');
+});
+
+//Lazy Loading Images
+const revealImage = entries => {
+  const [entry] = entries;
+
+  if (!entry.isIntersecting) return;
+
+  entry.target.src = entry.target.dataset.src;
+
+  //slow connection: when HD image finish load, remove blur
+  entry.target.addEventListener('load', function () {
+    entry.target.classList.remove('lazy-img');
+  });
+
+  imagesObserver.unobserve(entry.target);
+};
+
+const optionsImages = {
+  root: null,
+  threshold: 0.5,
+  rootMargin: '200px', //load 200px before we reach them
+};
+
+const imagesObserver = new IntersectionObserver(revealImage, optionsImages);
+
+allImages.forEach(img => {
+  imagesObserver.observe(img);
+});
