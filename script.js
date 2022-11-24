@@ -15,6 +15,9 @@ const headerElement = document.querySelector('.header');
 const heightNavBar = navBarElement.getBoundingClientRect().height;
 const sectionsElements = document.querySelectorAll('.section');
 const allImages = document.querySelectorAll('.lazy-img');
+const slides = document.querySelectorAll('.slide');
+const btnLeft = document.querySelector('.slider__btn--left');
+const btnRight = document.querySelector('.slider__btn--right');
 
 ///////////////////////////////////////
 // Modal window
@@ -198,3 +201,22 @@ const imagesObserver = new IntersectionObserver(revealImage, optionsImages);
 allImages.forEach(img => {
   imagesObserver.observe(img);
 });
+
+//SLIDER
+let currentSlide = 0;
+
+const moveSlide = function (event) {
+  if (event?.target.classList.contains('slider__btn--right'))
+    currentSlide < slides.length - 1 ? currentSlide++ : (currentSlide = 0);
+  else if (event?.target.classList.contains('slider__btn--left'))
+    currentSlide > 0 ? currentSlide-- : (currentSlide = slides.length - 1);
+
+  slides.forEach((slide, i) => {
+    slide.style.transform = `translate(${(i - currentSlide) * 100}%)`;
+  });
+};
+
+btnRight.addEventListener('click', moveSlide);
+btnLeft.addEventListener('click', moveSlide);
+
+moveSlide(); //aplicação inicia com o slide 0
