@@ -18,6 +18,7 @@ const allImages = document.querySelectorAll('.lazy-img');
 const slides = document.querySelectorAll('.slide');
 const btnLeft = document.querySelector('.slider__btn--left');
 const btnRight = document.querySelector('.slider__btn--right');
+const dotCointainer = document.querySelector('.dots');
 
 ///////////////////////////////////////
 // Modal window
@@ -205,18 +206,53 @@ allImages.forEach(img => {
 //SLIDER
 let currentSlide = 0;
 
-const moveSlide = function (event) {
-  if (event?.target.classList.contains('slider__btn--right'))
+//sliderdots
+const createDots = function () {
+  slides.forEach((_, i) => {
+    const html = `<button class="dots__dot" data-slide="${i}"></button>`;
+    dotCointainer.insertAdjacentHTML('beforeend', html);
+  });
+};
+
+const activeDot = function (number) {
+  [...dotCointainer.children].forEach(dot => {
+    if (dot.dataset.slide === number.toString()) {
+      dot.classList.add('dots__dot--active');
+    } else {
+      dot.classList.remove('dots__dot--active');
+    }
+  });
+};
+
+const moveSlide = function () {
+  if (this?.direction === 'right')
     currentSlide < slides.length - 1 ? currentSlide++ : (currentSlide = 0);
-  else if (event?.target.classList.contains('slider__btn--left'))
+  else if (this?.direction === 'left')
     currentSlide > 0 ? currentSlide-- : (currentSlide = slides.length - 1);
 
   slides.forEach((slide, i) => {
     slide.style.transform = `translate(${(i - currentSlide) * 100}%)`;
   });
+  activeDot(currentSlide);
 };
 
-btnRight.addEventListener('click', moveSlide);
-btnLeft.addEventListener('click', moveSlide);
+//mouse
+btnRight.addEventListener('click', moveSlide.bind({ direction: 'right' }));
+btnLeft.addEventListener('click', moveSlide.bind({ direction: 'left' }));
 
+//keyboard
+document.addEventListener('keydown', function (event) {
+  if (event.key === 'ArrowRight') moveSlide.bind({ direction: 'right' })();
+  else if (event.key === 'ArrowLeft') moveSlide.bind({ direction: 'left' })();
+});
+
+dotCointainer.addEventListener('click', function (event) {
+  const dotNumber = event.target.dataset.slide;
+  if (dotNumber) {
+    currentSlide = dotNumber;
+    moveSlide();
+  }
+});
+
+createDots(); //criar pontos no slider
 moveSlide(); //aplicação inicia com o slide 0
